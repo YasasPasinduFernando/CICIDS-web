@@ -1,26 +1,471 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>CICIDS2017 Attack Prediction</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CICIDS2017 Network Attack Prediction System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        table.data {border-collapse: collapse; width: 100%;}
-        table.data th, table.data td {border: 1px solid black; padding: 5px; text-align: center;}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .project-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border-left: 5px solid #667eea;
+        }
+
+        .project-info h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .info-item {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 3px solid #764ba2;
+        }
+
+        .info-item strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .upload-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .upload-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .upload-section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            padding: 20px 40px;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .file-input-wrapper:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, #11998e, #38ef7d);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(17, 153, 142, 0.3);
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(17, 153, 142, 0.4);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .file-name {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 25px;
+            color: #667eea;
+            font-weight: 600;
+            display: none;
+        }
+
+        .results-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .results-section h3 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.8em;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        table.data {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        table.data th {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 10px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1em;
+        }
+
+        table.data td {
+            padding: 12px 10px;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s ease;
+        }
+
+        table.data tbody tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        table.data tbody tr:nth-child(even) {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        .download-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(245, 87, 108, 0.3);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(245, 87, 108, 0.4);
+            text-decoration: none;
+            color: white;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .security-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #667eea;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .upload-section, .results-section {
+                padding: 20px;
+            }
+            
+            .security-badge {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin: 20px auto;
+                width: fit-content;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
-    <h2>Upload CSV to Predict Network Attacks</h2>
-    <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".csv" required>
-        <input type="submit" value="Predict">
-    </form>
-    {% if tables %}
-        <h3>Results for {{ filename }}</h3>
-        {% for table in tables %}
-            {{ table | safe }}
-        {% endfor %}
-    {% endif %}
-    {% if download_link %}
-        <p><a href="{{ download_link }}">Download full predictions CSV</a></p>
-    {% endif %}
+    <div class="security-badge">
+        <i class="fas fa-shield-alt"></i>
+        Secure Analysis
+    </div>
+
+    <div class="container">
+        <div class="header fade-in">
+            <h1><i class="fas fa-network-wired"></i> CICIDS2017 Attack Prediction System</h1>
+            <p class="subtitle">Advanced Network Security Analysis Using Machine Learning</p>
+            
+            <div class="project-info">
+                <h3><i class="fas fa-graduation-cap"></i> Academic Project Information</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>Student:</strong>
+                        H. Kalindu Gimantha (K2523795)
+                    </div>
+                    <div class="info-item">
+                        <strong>Program:</strong>
+                        MSc. Network and Information Security
+                    </div>
+                    <div class="info-item">
+                        <strong>Project Title:</strong>
+                        Improving Explainable Network Intrusion Detection Using Hybrid Deep Learning and Machine Learning Techniques
+                    </div>
+                    <div class="info-item">
+                        <strong>Focus Area:</strong>
+                        Commercial Banks in Sri Lanka
+                    </div>
+                    <div class="info-item">
+                        <strong>Supervisor:</strong>
+                        Ms. Thayuri Wickramapala
+                    </div>
+                    <div class="info-item">
+                        <strong>Institution:</strong>
+                        Faculty of Engineering and Computing, School of Computing
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="upload-section fade-in">
+            <h2><i class="fas fa-cloud-upload-alt"></i> Upload Network Data for Analysis</h2>
+            <form method="POST" enctype="multipart/form-data" class="upload-form" id="uploadForm">
+                <div class="file-input-wrapper">
+                    <i class="fas fa-file-csv"></i> Choose CSV File
+                    <input type="file" name="file" accept=".csv" required id="fileInput">
+                </div>
+                <div class="file-name" id="fileName"></div>
+                <button type="submit" class="submit-btn" id="submitBtn" disabled>
+                    <i class="fas fa-brain"></i> Analyze Network Traffic
+                </button>
+            </form>
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyzing network data... Please wait</p>
+            </div>
+        </div>
+
+        {% if tables %}
+        <div class="results-section fade-in">
+            <h3><i class="fas fa-chart-line"></i> Analysis Results for {{ filename }}</h3>
+            {% for table in tables %}
+                {{ table | safe }}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if download_link %}
+        <div class="download-section fade-in">
+            <a href="{{ download_link }}" class="download-btn">
+                <i class="fas fa-download"></i>
+                Download Complete Predictions Report
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        const submitBtn = document.getElementById('submitBtn');
+        const uploadForm = document.getElementById('uploadForm');
+        const loading = document.getElementById('loading');
+
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                fileName.textContent = `Selected: ${this.files[0].name}`;
+                fileName.style.display = 'block';
+                submitBtn.disabled = false;
+            } else {
+                fileName.style.display = 'none';
+                submitBtn.disabled = true;
+            }
+        });
+
+        uploadForm.addEventListener('submit', function() {
+            loading.style.display = 'block';
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        });
+
+        // Add smooth scrolling for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add entrance animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeIn 0.6s ease-in forwards';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.upload-section, .results-section').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>
