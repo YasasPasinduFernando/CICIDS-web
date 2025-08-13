@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CICIDS2017 Network Attack Prediction System</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <title>CICIDS2017 Attack Prediction</title>
     <style>
         * {
             margin: 0;
@@ -18,45 +17,34 @@
             min-height: 100vh;
             color: #333;
             line-height: 1.6;
+            padding: 20px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 20px;
         }
 
         .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             text-align: center;
-            margin-bottom: 40px;
-            padding: 40px 20px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 700;
-        }
-
-        .header .subtitle {
-            font-size: 1.2em;
-            color: #666;
-            margin-bottom: 20px;
+            color: #667eea;
+            font-size: 2.2em;
+            margin-bottom: 15px;
+            font-weight: 600;
         }
 
         .project-info {
-            background: rgba(255, 255, 255, 0.1);
+            background: #f8f9ff;
             padding: 20px;
-            border-radius: 15px;
+            border-radius: 10px;
             margin-top: 20px;
             border-left: 5px solid #667eea;
         }
@@ -64,52 +52,46 @@
         .project-info h3 {
             color: #333;
             margin-bottom: 15px;
-            font-size: 1.4em;
+            font-size: 1.2em;
         }
 
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
+        .info-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 10px;
         }
 
         .info-item {
-            background: rgba(255, 255, 255, 0.8);
-            padding: 15px;
-            border-radius: 10px;
+            flex: 1;
+            min-width: 250px;
+            background: white;
+            padding: 12px 15px;
+            border-radius: 8px;
             border-left: 3px solid #764ba2;
         }
 
         .info-item strong {
             color: #667eea;
             display: block;
+            font-size: 0.9em;
             margin-bottom: 5px;
         }
 
-        .upload-section {
-            background: rgba(255, 255, 255, 0.95);
+        .upload-card {
+            background: white;
             padding: 40px;
-            border-radius: 20px;
+            border-radius: 15px;
             margin-bottom: 30px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s ease;
-        }
-
-        .upload-section:hover {
-            transform: translateY(-5px);
-        }
-
-        .upload-section h2 {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             text-align: center;
-            margin-bottom: 30px;
-            font-size: 2em;
+        }
+
+        .upload-card h2 {
             color: #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            font-weight: 500;
         }
 
         .upload-form {
@@ -119,26 +101,29 @@
             gap: 20px;
         }
 
-        .file-input-wrapper {
+        .file-input-container {
             position: relative;
             display: inline-block;
-            cursor: pointer;
+        }
+
+        .file-input-label {
+            display: inline-block;
             background: linear-gradient(45deg, #667eea, #764ba2);
-            padding: 20px 40px;
-            border-radius: 50px;
             color: white;
-            font-size: 1.1em;
-            font-weight: 600;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
-        .file-input-wrapper:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        .file-input-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
 
-        .file-input-wrapper input[type="file"] {
+        input[type="file"] {
             position: absolute;
             opacity: 0;
             width: 100%;
@@ -150,66 +135,44 @@
             background: linear-gradient(45deg, #11998e, #38ef7d);
             color: white;
             border: none;
-            padding: 15px 40px;
-            border-radius: 50px;
-            font-size: 1.2em;
-            font-weight: 600;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 25px rgba(17, 153, 142, 0.3);
-            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(17, 153, 142, 0.3);
         }
 
         .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(17, 153, 142, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(17, 153, 142, 0.4);
         }
 
-        .submit-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .file-name {
-            margin-top: 15px;
-            padding: 10px 20px;
-            background: rgba(102, 126, 234, 0.1);
-            border-radius: 25px;
-            color: #667eea;
-            font-weight: 600;
-            display: none;
-        }
-
-        .results-section {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 40px;
-            border-radius: 20px;
+        .results-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
             margin-bottom: 30px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
-        .results-section h3 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 1.8em;
+        .results-card h3 {
             color: #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
+            font-size: 1.6em;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 500;
         }
 
         table.data {
             border-collapse: collapse;
             width: 100%;
-            margin: 20px 0;
             background: white;
-            border-radius: 15px;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin: 20px 0;
         }
 
         table.data th {
@@ -217,139 +180,125 @@
             color: white;
             padding: 15px 10px;
             text-align: center;
-            font-weight: 600;
-            font-size: 1em;
+            font-weight: 500;
+            font-size: 0.95em;
         }
 
         table.data td {
             padding: 12px 10px;
             text-align: center;
             border-bottom: 1px solid #f0f0f0;
-            transition: background 0.2s ease;
-        }
-
-        table.data tbody tr:hover {
-            background: rgba(102, 126, 234, 0.05);
         }
 
         table.data tbody tr:nth-child(even) {
-            background: rgba(0, 0, 0, 0.02);
+            background: #f8f9ff;
+        }
+
+        table.data tbody tr:hover {
+            background: #e8f0ff;
         }
 
         .download-section {
             text-align: center;
-            margin-top: 30px;
+            margin-top: 25px;
         }
 
         .download-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
+            display: inline-block;
             background: linear-gradient(45deg, #f093fb, #f5576c);
             color: white;
             text-decoration: none;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1.1em;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 500;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 25px rgba(245, 87, 108, 0.3);
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
         }
 
         .download-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(245, 87, 108, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
             text-decoration: none;
             color: white;
         }
 
-        .loading {
-            display: none;
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .security-badge {
-            position: fixed;
+        .badge {
+            position: absolute;
             top: 20px;
             right: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 10px 20px;
-            border-radius: 25px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9em;
-            font-weight: 600;
+            background: rgba(255,255,255,0.9);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
             color: #667eea;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
 
         @media (max-width: 768px) {
-            .container {
+            body {
                 padding: 10px;
             }
             
-            .header h1 {
-                font-size: 2em;
-            }
-            
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .upload-section, .results-section {
+            .header {
                 padding: 20px;
             }
             
-            .security-badge {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .info-row {
+                flex-direction: column;
+            }
+            
+            .info-item {
+                min-width: auto;
+            }
+            
+            .upload-card, .results-card {
+                padding: 25px 20px;
+            }
+            
+            .badge {
                 position: relative;
                 top: auto;
                 right: auto;
-                margin: 20px auto;
-                width: fit-content;
+                display: inline-block;
+                margin-bottom: 20px;
+            }
+            
+            table.data {
+                font-size: 0.9em;
+            }
+            
+            table.data th,
+            table.data td {
+                padding: 8px 5px;
             }
         }
 
         .fade-in {
-            animation: fadeIn 0.6s ease-in;
+            animation: fadeIn 0.5s ease-in;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
-    <div class="security-badge">
-        <i class="fas fa-shield-alt"></i>
-        Secure Analysis
-    </div>
-
+    <div class="badge">🛡️ Secure Analysis</div>
+    
     <div class="container">
         <div class="header fade-in">
-            <h1><i class="fas fa-network-wired"></i> CICIDS2017 Attack Prediction System</h1>
-            <p class="subtitle">Advanced Network Security Analysis Using Machine Learning</p>
+            <h1>🔒 CICIDS2017 Network Attack Prediction</h1>
+            <p style="color: #666; font-size: 1.1em; margin-bottom: 0;">Advanced Network Security Analysis System</p>
             
             <div class="project-info">
-                <h3><i class="fas fa-graduation-cap"></i> Academic Project Information</h3>
-                <div class="info-grid">
+                <h3>📚 Academic Research Project</h3>
+                <div class="info-row">
                     <div class="info-item">
                         <strong>Student:</strong>
                         H. Kalindu Gimantha (K2523795)
@@ -358,114 +307,90 @@
                         <strong>Program:</strong>
                         MSc. Network and Information Security
                     </div>
+                </div>
+                <div class="info-row">
                     <div class="info-item">
-                        <strong>Project Title:</strong>
+                        <strong>Project:</strong>
                         Improving Explainable Network Intrusion Detection Using Hybrid Deep Learning and Machine Learning Techniques
-                    </div>
-                    <div class="info-item">
-                        <strong>Focus Area:</strong>
-                        Commercial Banks in Sri Lanka
                     </div>
                     <div class="info-item">
                         <strong>Supervisor:</strong>
                         Ms. Thayuri Wickramapala
                     </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-item">
+                        <strong>Focus Area:</strong>
+                        Commercial Banks in Sri Lanka
+                    </div>
                     <div class="info-item">
                         <strong>Institution:</strong>
-                        Faculty of Engineering and Computing, School of Computing
+                        Faculty of Engineering and Computing
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="upload-section fade-in">
-            <h2><i class="fas fa-cloud-upload-alt"></i> Upload Network Data for Analysis</h2>
-            <form method="POST" enctype="multipart/form-data" class="upload-form" id="uploadForm">
-                <div class="file-input-wrapper">
-                    <i class="fas fa-file-csv"></i> Choose CSV File
-                    <input type="file" name="file" accept=".csv" required id="fileInput">
+        <div class="upload-card fade-in">
+            <h2>📊 Upload CSV to Predict Network Attacks</h2>
+            <form method="POST" enctype="multipart/form-data" class="upload-form">
+                <div class="file-input-container">
+                    <label for="file" class="file-input-label">
+                        📁 Choose CSV File
+                    </label>
+                    <input type="file" name="file" id="file" accept=".csv" required>
                 </div>
-                <div class="file-name" id="fileName"></div>
-                <button type="submit" class="submit-btn" id="submitBtn" disabled>
-                    <i class="fas fa-brain"></i> Analyze Network Traffic
-                </button>
+                <input type="submit" value="🚀 Analyze & Predict" class="submit-btn">
             </form>
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                <p>Analyzing network data... Please wait</p>
-            </div>
         </div>
 
         {% if tables %}
-        <div class="results-section fade-in">
-            <h3><i class="fas fa-chart-line"></i> Analysis Results for {{ filename }}</h3>
+        <div class="results-card fade-in">
+            <h3>📈 Analysis Results for {{ filename }}</h3>
             {% for table in tables %}
                 {{ table | safe }}
             {% endfor %}
-        </div>
-        {% endif %}
-
-        {% if download_link %}
-        <div class="download-section fade-in">
-            <a href="{{ download_link }}" class="download-btn">
-                <i class="fas fa-download"></i>
-                Download Complete Predictions Report
-            </a>
+            
+            {% if download_link %}
+            <div class="download-section">
+                <a href="{{ download_link }}" class="download-btn">
+                    💾 Download Complete Predictions CSV
+                </a>
+            </div>
+            {% endif %}
         </div>
         {% endif %}
     </div>
 
     <script>
-        const fileInput = document.getElementById('fileInput');
-        const fileName = document.getElementById('fileName');
-        const submitBtn = document.getElementById('submitBtn');
-        const uploadForm = document.getElementById('uploadForm');
-        const loading = document.getElementById('loading');
-
-        fileInput.addEventListener('change', function() {
+        // Simple file name display
+        document.getElementById('file').addEventListener('change', function() {
+            const label = document.querySelector('.file-input-label');
             if (this.files && this.files[0]) {
-                fileName.textContent = `Selected: ${this.files[0].name}`;
-                fileName.style.display = 'block';
-                submitBtn.disabled = false;
+                label.textContent = '✅ ' + this.files[0].name;
+                label.style.background = 'linear-gradient(45deg, #11998e, #38ef7d)';
             } else {
-                fileName.style.display = 'none';
-                submitBtn.disabled = true;
+                label.textContent = '📁 Choose CSV File';
+                label.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
             }
         });
 
-        uploadForm.addEventListener('submit', function() {
-            loading.style.display = 'block';
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        // Add fade-in animation to elements when they come into view
+        const elements = document.querySelectorAll('.fade-in');
+        elements.forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
         });
 
-        // Add smooth scrolling for better UX
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+        setTimeout(() => {
+            elements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.style.transition = 'all 0.5s ease';
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, index * 200);
             });
-        });
-
-        // Add entrance animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.animation = 'fadeIn 0.6s ease-in forwards';
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.upload-section, .results-section').forEach(el => {
-            observer.observe(el);
-        });
+        }, 100);
     </script>
 </body>
 </html>
